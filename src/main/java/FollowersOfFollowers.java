@@ -20,7 +20,7 @@ public class FollowersOfFollowers {
 
     public static class FirstIterationMapper extends Mapper<Object, Text, Text, Text> {
 
-        public void map(Object key, Text value, Context context	) throws IOException, InterruptedException {
+        public void map(Object key, Text value, Context context ) throws IOException, InterruptedException {
             StringTokenizer tokenizer  = new StringTokenizer(value.toString());
             if (tokenizer.hasMoreTokens()) {
                 String userId = tokenizer.nextToken();
@@ -34,7 +34,7 @@ public class FollowersOfFollowers {
     }
 
     public static class FirstIterationReducer extends Reducer<Text,Text,Text,Text> {
-        public void reduce(Text key, Iterable<Text> values,	Context context) throws IOException, InterruptedException {
+        public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
             StringBuilder builder = new StringBuilder();
             HashSet<String> hash = new HashSet<String>();
             for (Text value : values) {
@@ -131,11 +131,11 @@ public class FollowersOfFollowers {
         Configuration conf2 = new Configuration();
         Job job2 = Job.getInstance(conf2, "Second Iteration");
         job2.setJarByClass(FollowersOfFollowers.class);
-        job2.setMapperClass(FirstIterationMapper.class);
+        job2.setMapperClass(SecondIterationMapper.class);
         job2.setMapOutputKeyClass(Text.class);
         job2.setMapOutputValueClass(Text.class);
-        // job2.setCombinerClass(FirstIterationReducer.class);
-        job2.setReducerClass(FirstIterationReducer.class);
+        // job2.setCombinerClass(SecondIterationReducer.class);
+        job2.setReducerClass(SecondIterationReducer.class);
         job2.setOutputKeyClass(Text.class);
         job2.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job2, new Path(args[1]));
